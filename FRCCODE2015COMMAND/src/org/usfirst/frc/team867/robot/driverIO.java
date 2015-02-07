@@ -17,7 +17,7 @@ import org.usfirst.frc.team867.robot.commands.TeleDriveManager;
 public class driverIO 
 {
  
- Preferences prefs;
+ Preferences prefs = Preferences.getInstance();
  Joystick joy;
  Button	drive;  // initiates safety button
  Button	reverse; // initiates reverse button
@@ -27,10 +27,10 @@ public class driverIO
  double	joyyaxis;
  double joyzaxis;
  double driverjoyslow; 
- double frontLeftMotor;
- double rearLeftMotor;
- double frontRightMotor;
- double rearRightMotor;
+ int frontLeftMotor;
+ int rearLeftMotor;
+ int frontRightMotor;
+ int rearRightMotor;
  
  	public driverIO()
  	{ 	
@@ -44,13 +44,12 @@ public class driverIO
  		 joyyaxis = joy.getRawAxis(1);
  		 joyzaxis = joy.getRawAxis(2);
  		
- 		
- 		
- 		drive.whileHeld(new TeleDriveManager());
  		frontLeftMotor = prefs.getInt("frontLeftMotor", 2);
  		rearLeftMotor = prefs.getInt("rearLeftMotor", 1);
  		frontRightMotor = prefs.getInt("frontRightMotor", 3);
  		rearRightMotor = prefs.getInt("rearRightMotor", 0);
+ 		
+ 		drive.whileHeld(new TeleDriveManager());
  	}
  
   
@@ -79,7 +78,15 @@ public class driverIO
  		return pivotccw;
  	}
  
- 
+ 	public int[] getMotorPorts()
+ 	{
+ 		int[] motorPorts = new int[4];
+ 		motorPorts[0] = frontLeftMotor;
+ 		motorPorts[1] = rearLeftMotor;
+ 		motorPorts[2] = frontRightMotor;
+ 		motorPorts[3] = rearRightMotor;
+ 		return motorPorts;
+ 	}
  
  	//// CREATING BUTTONS
     // One type of button is a joystick button which is any button on a joystick.

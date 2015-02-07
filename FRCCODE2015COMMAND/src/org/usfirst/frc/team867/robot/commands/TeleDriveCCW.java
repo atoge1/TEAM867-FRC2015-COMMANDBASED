@@ -1,42 +1,37 @@
 package org.usfirst.frc.team867.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-
-import org.usfirst.frc.team867.robot.driverIO;
-import org.usfirst.frc.team867.robot.commands.TeleDriveForward;
-import org.usfirst.frc.team867.robot.commands.TeleDriveCW;
-import org.usfirst.frc.team867.robot.commands.TeleDriveCCW;
 import org.usfirst.frc.team867.robot.subsystems.DriveTrain;
-import edu.wpi.first.wpilibj.buttons.Button;
+import org.usfirst.frc.team867.robot.driverIO;
+
 
 /**
- *
+ * 
+ * @author Aaron
+ * Receives data from controller and pipes it to motors 
+ * 
  */
-public class TeleDriveManager extends Command {
-
+public class TeleDriveCCW extends Command 
+{
 	driverIO control = new driverIO();
-	TeleDriveForward drive = new TeleDriveForward();
+	DriveTrain drive = new DriveTrain();
 	
-    public TeleDriveManager() 
+    public TeleDriveCCW() 
     {
-        requires(new DriveTrain());
+        requires(drive);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() 
     {
-    	
+    	int[] motors = control.getMotorPorts();
+    	drive.DriveInit(motors[0], motors[1], motors[2], motors[3]);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() 
     {
-    	Button CW = control.getCW();
-    	Button CCW = control.getCCW();
-    	
-    	CW.whileHeld(new TeleDriveCW());
-    	CCW.whileHeld(new TeleDriveCCW());
-    	drive.start();
+    	drive.Drive(control.getX(), control.getY(), -0.5, control.getSlow()); //insert controller values
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -48,7 +43,7 @@ public class TeleDriveManager extends Command {
     // Called once after isFinished returns true
     protected void end() 
     {
-    	drive.interrupted();
+    	drive.Drive(0,0,0,0); //stop all motors
     }
 
     // Called when another command which requires one or more of the same
@@ -57,4 +52,5 @@ public class TeleDriveManager extends Command {
     {
     	end();
     }
+    
 }

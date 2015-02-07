@@ -14,7 +14,6 @@ import org.usfirst.frc.team867.robot.driverIO;
 public class TeleDriveForward extends Command 
 {
 	driverIO control = new driverIO();
-
 	DriveTrain drive = new DriveTrain();
 	
     public TeleDriveForward() 
@@ -25,7 +24,8 @@ public class TeleDriveForward extends Command
     // Called just before this Command runs the first time
     protected void initialize() 
     {
-    	drive.DriveInit(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
+    	int[] motors = control.getMotorPorts();
+    	drive.DriveInit(motors[0], motors[1], motors[2], motors[3]);
     }
 
     // Called repeatedly when this Command is scheduled to run
