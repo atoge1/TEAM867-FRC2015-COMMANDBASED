@@ -3,7 +3,8 @@ package org.usfirst.frc.team867.robot;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.Joystick;
-import org.usfirst.frc.team867.robot.commands.TeleDriveForward;
+import edu.wpi.first.wpilibj.Preferences;
+import org.usfirst.frc.team867.robot.commands.TeleDriveManager;
 
 
 /**
@@ -15,35 +16,29 @@ import org.usfirst.frc.team867.robot.commands.TeleDriveForward;
  */
 public class driverIO 
 {
- 	
- Joystick joy;
- Button drive;
- Button reverse;
- Button pivotccw;
- Button pivotcw;
- double joyxaxis;
- double joyyaxis;
- double joyzaxis;
- double driverjoyslow;
  
- 
+ Preferences prefs;
+ Joystick joy = new Joystick(0);
+ Button	drive = new JoystickButton(joy, 1);  // initiates safety button
+ Button	reverse  = new JoystickButton(joy, 2); // initiates reverse button
+ Button pivotccw  = new JoystickButton(joy, 4);// initiates counter-clockwise pivot button
+ Button pivotcw  = new JoystickButton(joy, 5); // initiates clockwise button 
+ double joyxaxis = joy.getRawAxis(0);
+ double	joyyaxis = joy.getRawAxis(1);
+ double joyzaxis = joy.getRawAxis(2);
+ double driverjoyslow = joyzaxis; 
+ double frontLeftMotor;
+ double rearLeftMotor;
+ double frontRightMotor;
+ double rearRightMotor;
  
  	public driverIO()
- 	{
- 		joy = new Joystick(0);
- 		drive = new JoystickButton(joy, 1);  // initiates safety button
- 		reverse  = new JoystickButton(joy, 2); // initiates reverse button
- 		pivotccw  = new JoystickButton(joy, 4);// initiates counter-clockwise pivot button
- 		pivotcw  = new JoystickButton(joy, 5); // initiates clockwise button 
- 		joyxaxis = joy.getRawAxis(0);
- 		joyyaxis = joy.getRawAxis(1);
- 		joyzaxis = joy.getRawAxis(2);
- 		driverjoyslow = joyzaxis;
- 		
- 		drive.whileHeld(TeleDriveForward);
- 		
- 		
- 		
+ 	{ 	
+ 		drive.whileHeld(new TeleDriveManager());
+ 		frontLeftMotor = prefs.getInt("frontLeftMotor", 2);
+ 		rearLeftMotor = prefs.getInt("rearLeftMotor", 1);
+ 		frontRightMotor = prefs.getInt("frontRightMotor", 3);
+ 		rearRightMotor = prefs.getInt("rearRightMotor", 0);
  	}
  
   
@@ -55,6 +50,11 @@ public class driverIO
  	public double getY()
  	{
  		return joyyaxis;
+ 	}
+ 	
+ 	public double getSlow()
+ 	{
+ 		return driverjoyslow;
  	}
  
  
